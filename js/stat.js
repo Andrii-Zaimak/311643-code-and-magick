@@ -28,14 +28,11 @@ window.renderStatistics = function (ctx, names, stats) {
   ctx.fillText('Список результатов:', WINDOW_X + 20, WINDOW_Y + 60);
 
   // chart
-  var maxPlayerTime;
+  var maxPlayerTime = stats[0];
 
-  for (i = 0; i < stats.length; i++) {
-    // convert to int
-    stats[i] = parseInt(stats[i], 10);
-
+  for (i = 1; i < stats.length; i++) {
     // find max value
-    if (i === 0 || stats[i] > maxPlayerTime) {
+    if (stats[i] > maxPlayerTime) {
       maxPlayerTime = stats[i];
     }
   }
@@ -65,6 +62,6 @@ window.renderStatistics = function (ctx, names, stats) {
     ctx.fillText(name, x, WINDOW_Y + WINDOW_HEIGHT - 10);
 
     // time
-    ctx.fillText(stat, x, y - 5);
+    ctx.fillText(stat.toFixed(0), x, y - 5);
   }
 };
