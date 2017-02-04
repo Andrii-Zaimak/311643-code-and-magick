@@ -77,33 +77,19 @@ setupOpenBtnNode.addEventListener('keydown', function (evt) {
   }
 });
 
-// close setup window
-setupCloseBtnNode.addEventListener('click', function () {
-  closeSetupWindow();
-});
-
-setupCloseBtnNode.addEventListener('keydown', function (evt) {
-  if (isValidKeyPressed(evt, [KEY_CODE_ENTER, KEY_CODE_SPACE])) {
-    closeSetupWindow();
-  }
-});
-
-// save setup settings
-setupSaveBtnNode.addEventListener('click', function () {
-  closeSetupWindow();
-});
-
-setupSaveBtnNode.addEventListener('keydown', function (evt) {
-  if (isValidKeyPressed(evt, [KEY_CODE_ENTER, KEY_CODE_SPACE])) {
-    closeSetupWindow();
-  }
-});
-
 /**
  * Open dialog window.
  */
 function openSetupWindow() {
   setupWindowNode.classList.remove('invisible');
+
+  // close setup window
+  setupCloseBtnNode.addEventListener('click', closeSetupWindowhandler);
+  setupCloseBtnNode.addEventListener('keydown', closeSetupWindowhandler);
+
+  // close setup window when press save button
+  setupSaveBtnNode.addEventListener('click', closeSetupWindowhandler);
+  setupSaveBtnNode.addEventListener('keydown', closeSetupWindowhandler);
 
   document.addEventListener('keydown', keyDownHandler);
   document.addEventListener('focus', changeFocusHandler, true);
@@ -127,6 +113,10 @@ function closeSetupWindow() {
   }
 
   // remove unused listeners
+  setupCloseBtnNode.removeEventListener('click', closeSetupWindowhandler);
+  setupCloseBtnNode.removeEventListener('keydown', closeSetupWindowhandler);
+  setupSaveBtnNode.removeEventListener('click', closeSetupWindowhandler);
+  setupSaveBtnNode.removeEventListener('keydown', closeSetupWindowhandler);
   document.removeEventListener('keydown', keyDownHandler);
   document.removeEventListener('focus', changeFocusHandler, true);
 }
@@ -144,7 +134,7 @@ function keyDownHandler(evt) {
 /**
  * Check for need key is pressed.
  * @param {object} evt - keypress object.
- * @param {array} keyCodes - list of valid keys.
+ * @param {Array} keyCodes - list of valid keys.
  * @return {boolean} true - if key is valid, false - if keyCode is undefined or invalid.
  */
 function isValidKeyPressed(evt, keyCodes) {
@@ -159,5 +149,11 @@ function changeFocusHandler(evt) {
   if (!setupWindowNode.contains(evt.target)) {
     evt.preventDefault();
     setupCloseBtnNode.focus();
+  }
+}
+
+function closeSetupWindowhandler(evt) {
+  if (evt.type === 'click' || evt.type === 'keydown' && isValidKeyPressed(evt, [KEY_CODE_ENTER, KEY_CODE_SPACE])) {
+    closeSetupWindow();
   }
 }
