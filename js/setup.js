@@ -154,6 +154,7 @@ function changeFocusHandler(evt) {
 
 function closeSetupWindowhandler(evt) {
   if (evt.type === 'click' || evt.type === 'keydown' && isValidKeyPressed(evt, [KEY_CODE_ENTER, KEY_CODE_SPACE])) {
+    evt.stopPropagation();
     closeSetupWindow();
   }
 }
