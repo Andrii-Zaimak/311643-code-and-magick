@@ -3,10 +3,6 @@
  */
 'use strict';
 
-var KEY_CODE_ENTER = 13;
-var KEY_CODE_ESCAPE = 27;
-var KEY_CODE_SPACE = 32;
-
 var wizardCoatColorsList = [
   'rgb(101, 137, 164)',
   'rgb(241, 43, 107)',
@@ -39,10 +35,6 @@ var wizardCoatNode = setupWindowNode.querySelector('#wizard-coat');
 var wizardEyesNode = setupWindowNode.querySelector('#wizard-eyes');
 var wizardFireballNode = setupWindowNode.querySelector('.setup-fireball-wrap');
 
-var wizardCoatIndex = 0;
-var wizardEyesIndex = 0;
-var wizardFireballIndex = 0;
-
 var lastFocusElement;
 
 // add validation option to user name field
@@ -51,20 +43,10 @@ var lastFocusElement;
 userNameNode.required = true;
 userNameNode.maxLength = 50;
 
-// change wizard coat
-wizardCoatNode.addEventListener('click', function () {
-  wizardCoatNode.style.fill = wizardCoatColorsList[++wizardCoatIndex % wizardCoatColorsList.length];
-});
-
-// change wizard eyes color
-wizardEyesNode.addEventListener('click', function () {
-  wizardEyesNode.style.fill = wizardEyesColorsList[++wizardEyesIndex % wizardEyesColorsList.length];
-});
-
-// change wizard fireball color
-wizardFireballNode.addEventListener('click', function () {
-  wizardFireballNode.style.backgroundColor = wizardFireballColorsList[++wizardFireballIndex % wizardFireballColorsList.length];
-});
+// wizard color settings.
+window.colorizeElement(wizardCoatNode, wizardCoatColorsList, 'fill');
+window.colorizeElement(wizardEyesNode, wizardEyesColorsList, 'fill');
+window.colorizeElement(wizardFireballNode, wizardFireballColorsList, 'background');
 
 // open setup window
 setupOpenBtnNode.addEventListener('click', function () {
@@ -72,7 +54,7 @@ setupOpenBtnNode.addEventListener('click', function () {
 });
 
 setupOpenBtnNode.addEventListener('keydown', function (evt) {
-  if (isValidKeyPressed(evt, [KEY_CODE_ENTER, KEY_CODE_SPACE])) {
+  if (window.utils.isValidKeyPressed(evt, [window.utils.KEY_CODE_ENTER, window.utils.KEY_CODE_SPACE])) {
     openSetupWindow();
   }
 });
@@ -84,12 +66,12 @@ function openSetupWindow() {
   setupWindowNode.classList.remove('invisible');
 
   // close setup window
-  setupCloseBtnNode.addEventListener('click', closeSetupWindowhandler);
-  setupCloseBtnNode.addEventListener('keydown', closeSetupWindowhandler);
+  setupCloseBtnNode.addEventListener('click', closeSetupWindowHandler);
+  setupCloseBtnNode.addEventListener('keydown', closeSetupWindowHandler);
 
   // close setup window when press save button
-  setupSaveBtnNode.addEventListener('click', closeSetupWindowhandler);
-  setupSaveBtnNode.addEventListener('keydown', closeSetupWindowhandler);
+  setupSaveBtnNode.addEventListener('click', closeSetupWindowHandler);
+  setupSaveBtnNode.addEventListener('keydown', closeSetupWindowHandler);
 
   document.addEventListener('keydown', keyDownHandler);
   document.addEventListener('focus', changeFocusHandler, true);
@@ -113,10 +95,10 @@ function closeSetupWindow() {
   }
 
   // remove unused listeners
-  setupCloseBtnNode.removeEventListener('click', closeSetupWindowhandler);
-  setupCloseBtnNode.removeEventListener('keydown', closeSetupWindowhandler);
-  setupSaveBtnNode.removeEventListener('click', closeSetupWindowhandler);
-  setupSaveBtnNode.removeEventListener('keydown', closeSetupWindowhandler);
+  setupCloseBtnNode.removeEventListener('click', closeSetupWindowHandler);
+  setupCloseBtnNode.removeEventListener('keydown', closeSetupWindowHandler);
+  setupSaveBtnNode.removeEventListener('click', closeSetupWindowHandler);
+  setupSaveBtnNode.removeEventListener('keydown', closeSetupWindowHandler);
   document.removeEventListener('keydown', keyDownHandler);
   document.removeEventListener('focus', changeFocusHandler, true);
 }
@@ -126,19 +108,9 @@ function closeSetupWindow() {
  * @param {object} evt - keypress object.
  */
 function keyDownHandler(evt) {
-  if (isValidKeyPressed(evt, [KEY_CODE_ESCAPE])) {
+  if (window.utils.isValidKeyPressed(evt, [window.utils.KEY_CODE_ESCAPE])) {
     closeSetupWindow();
   }
-}
-
-/**
- * Check for need key is pressed.
- * @param {object} evt - keypress object.
- * @param {Array} keyCodes - list of valid keys.
- * @return {boolean} true - if key is valid, false - if keyCode is undefined or invalid.
- */
-function isValidKeyPressed(evt, keyCodes) {
-  return evt.keyCode && keyCodes.indexOf(evt.keyCode) !== -1;
 }
 
 /**
@@ -152,8 +124,8 @@ function changeFocusHandler(evt) {
   }
 }
 
-function closeSetupWindowhandler(evt) {
-  if (evt.type === 'click' || evt.type === 'keydown' && isValidKeyPressed(evt, [KEY_CODE_ENTER, KEY_CODE_SPACE])) {
+function closeSetupWindowHandler(evt) {
+  if (evt.type === 'click' || evt.type === 'keydown' && window.utils.isValidKeyPressed(evt, [window.utils.KEY_CODE_ENTER, window.utils.KEY_CODE_SPACE])) {
     evt.stopPropagation();
     closeSetupWindow();
   }
