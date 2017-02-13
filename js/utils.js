@@ -14,7 +14,7 @@ window.utils = {
    * @return {number} - random index.
    */
   getRandomElement: function (arr) {
-    return Math.floor(Math.random() * arr.length);
+    return arr[Math.floor(Math.random() * arr.length)];
   },
   /**
    * Get random index doesn't include index.
@@ -22,23 +22,14 @@ window.utils = {
    * @param {number} lastIndex - index.
    * @return {number} - random index.
    */
-  getRandomElementExcept: function (arr, lastIndex) {
-    var index = null;
+  getRandomElementExcept: function (arr, color) {
+    var currentColor = null;
 
     do {
-      index = this.getRandomElement(arr);
-    } while (index === lastIndex);
+      currentColor = this.getRandomElement(arr);
+    } while (currentColor === color);
 
-    return index;
-  },
-  /**
-   * Get next index in array.
-   * @param {Array} arr - source array.
-   * @param {number} currentIndex - current index in array.
-   * @return {number}
-     */
-  getNextIndex: function (arr, currentIndex) {
-    return (currentIndex + 1) % arr.length;
+    return currentColor;
   },
   /**
    * Check for need key is pressed.
