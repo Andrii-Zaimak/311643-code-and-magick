@@ -9,18 +9,18 @@ window.utils = {
   KEY_CODE_SPACE: 32,
 
   /**
-   * Get random index of array.
+   * Get random color of array.
    * @param {Array} arr - source array.
-   * @return {number} - random index.
+   * @return {string} - random color.
    */
   getRandomElement: function (arr) {
     return arr[Math.floor(Math.random() * arr.length)];
   },
   /**
-   * Get random index doesn't include index.
+   * Get random color doesn't include color.
    * @param {Array} arr - source array.
-   * @param {number} lastIndex - index.
-   * @return {number} - random index.
+   * @param {string} color - index.
+   * @return {string} - random color.
    */
   getRandomElementExcept: function (arr, color) {
     var currentColor = null;
