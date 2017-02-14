@@ -10,12 +10,15 @@
  * @param {string} property
  */
 window.colorizeElement = (function () {
-  return function (element, colors, property) {
+  return function (element, colors, callback) {
     var currentColor = null;
 
     var changeColor = function () {
       currentColor = window.utils.getRandomElementExcept(colors, currentColor);
-      element.style[property] = currentColor;
+
+      if (typeof callback === 'function') {
+        callback(element, currentColor);
+      }
     };
 
     element.addEventListener('keydown', function (evt) {

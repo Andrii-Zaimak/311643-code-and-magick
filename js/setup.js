@@ -29,7 +29,6 @@ window.setup = (function () {
   ];
 
   var setupWindowNode = document.querySelector('.setup');
-  var setupOpenBtnNode = document.querySelector('.setup-open');
   var setupCloseBtnNode = setupWindowNode.querySelector('.setup-close');
   var setupSaveBtnNode = setupWindowNode.querySelector('.setup-submit');
   var userNameNode = setupWindowNode.querySelector('.setup-user-name');
@@ -37,7 +36,7 @@ window.setup = (function () {
   var wizardEyesNode = setupWindowNode.querySelector('#wizard-eyes');
   var wizardFireballNode = setupWindowNode.querySelector('.setup-fireball-wrap');
 
-  var lastFocusElement;
+  var onCloseWindow;
 
   // add validation option to user name field
   // - no empty
@@ -46,25 +45,24 @@ window.setup = (function () {
   userNameNode.maxLength = 50;
 
   // wizard color settings.
-  window.colorizeElement(wizardCoatNode, wizardCoatColorsList, 'fill');
-  window.colorizeElement(wizardEyesNode, wizardEyesColorsList, 'fill');
-  window.colorizeElement(wizardFireballNode, wizardFireballColorsList, 'background');
+  window.colorizeElement(wizardCoatNode, wizardCoatColorsList, colorizeFill);
+  window.colorizeElement(wizardEyesNode, wizardEyesColorsList, colorizeFill);
+  window.colorizeElement(wizardFireballNode, wizardFireballColorsList, colorizeBackground);
 
-  // open setup window
-  setupOpenBtnNode.addEventListener('click', function () {
-    openSetupWindow();
-  });
+  function colorizeFill(element, color) {
+    element.style.fill = color;
+  }
 
-  setupOpenBtnNode.addEventListener('keydown', function (evt) {
-    if (window.utils.isValidKeyPressed(evt, [window.utils.KEY_CODE_ENTER, window.utils.KEY_CODE_SPACE])) {
-      openSetupWindow();
-    }
-  });
+  function colorizeBackground(element, color) {
+    element.style.background = color;
+  }
 
   /**
    * Open dialog window.
-   */
-  function openSetupWindow() {
+   * @param {function} callback
+     */
+  function openWindow(callback) {
+    onCloseWindow = callback;
     setupWindowNode.classList.remove('invisible');
 
     // close setup window
@@ -78,24 +76,15 @@ window.setup = (function () {
     document.addEventListener('keydown', keyDownHandler);
     document.addEventListener('focus', changeFocusHandler, true);
 
-    // save last focused element
-    lastFocusElement = document.activeElement;
     // set focus to setup window
-    // setupWindowNode.focus();
     setupCloseBtnNode.focus();
   }
 
   /**
    * Close dialog window.
    */
-  function closeSetupWindow() {
+  function closeWindow() {
     setupWindowNode.classList.add('invisible');
-
-    // return focus to last focused element before open setup window
-    if (lastFocusElement) {
-      lastFocusElement.focus();
-      lastFocusElement = null;
-    }
 
     // remove unused listeners
     setupCloseBtnNode.removeEventListener('click', closeSetupWindowHandler);
@@ -104,21 +93,26 @@ window.setup = (function () {
     setupSaveBtnNode.removeEventListener('keydown', closeSetupWindowHandler);
     document.removeEventListener('keydown', keyDownHandler);
     document.removeEventListener('focus', changeFocusHandler, true);
+
+    // callback function
+    if (typeof onCloseWindow === 'function') {
+      onCloseWindow();
+    }
   }
 
   /**
    * Key down.
-   * @param {object} evt - keypress object.
+   * @param {Object} evt - keypress object.
    */
   function keyDownHandler(evt) {
     if (window.utils.isValidKeyPressed(evt, [window.utils.KEY_CODE_ESCAPE])) {
-      closeSetupWindow();
+      closeWindow();
     }
   }
 
   /**
    * Change focus.
-   * @param {object} evt - focus object.
+   * @param {Object} evt - focus object.
    */
   function changeFocusHandler(evt) {
     if (!setupWindowNode.contains(evt.target)) {
@@ -130,7 +124,11 @@ window.setup = (function () {
   function closeSetupWindowHandler(evt) {
     if (evt.type === 'click' || evt.type === 'keydown' && window.utils.isValidKeyPressed(evt, [window.utils.KEY_CODE_ENTER, window.utils.KEY_CODE_SPACE])) {
       evt.stopPropagation();
-      closeSetupWindow();
+      closeWindow();
     }
   }
+
+  return {
+    show: openWindow
+  };
 })();
