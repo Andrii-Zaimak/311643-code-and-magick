@@ -4,7 +4,6 @@
 'use strict';
 
 window.setup = (function () {
-
   var wizardCoatColorsList = [
     'rgb(101, 137, 164)',
     'rgb(241, 43, 107)',
@@ -40,18 +39,18 @@ window.setup = (function () {
 
   var lastFocusElement;
 
-// add validation option to user name field
-// - no empty
-// - max length 50 chars
+  // add validation option to user name field
+  // - no empty
+  // - max length 50 chars
   userNameNode.required = true;
   userNameNode.maxLength = 50;
 
-// wizard color settings.
+  // wizard color settings.
   window.colorizeElement(wizardCoatNode, wizardCoatColorsList, 'fill');
   window.colorizeElement(wizardEyesNode, wizardEyesColorsList, 'fill');
   window.colorizeElement(wizardFireballNode, wizardFireballColorsList, 'background');
 
-// open setup window
+  // open setup window
   setupOpenBtnNode.addEventListener('click', function () {
     openSetupWindow();
   });
