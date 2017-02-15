@@ -102,7 +102,7 @@ window.setup = (function () {
 
   /**
    * Key down.
-   * @param {Object} evt - keypress object.
+   * @param {KeyboardEvent} evt - keypress object.
    */
   function keyDownHandler(evt) {
     if (window.utils.isValidKeyPressed(evt, [window.utils.KEY_CODE_ESCAPE])) {
@@ -112,7 +112,7 @@ window.setup = (function () {
 
   /**
    * Change focus.
-   * @param {Object} evt - focus object.
+   * @param {FocusEvent} evt - focus object.
    */
   function changeFocusHandler(evt) {
     if (!setupWindowNode.contains(evt.target)) {
